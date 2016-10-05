@@ -32,7 +32,8 @@
       position: 'topleft',
       polygon: false,
       polyline: {
-          metric: true
+          metric: true,
+          allowIntersection: false
       },
       rectangle: false,
       circle: false,
@@ -42,8 +43,12 @@
       featureGroup: drawnItems
     }
   });
-  map.addControl(drawControl);
+  L.drawLocal.draw.toolbar.buttons.polyline = 'Draw a new wall';
+  L.drawLocal.draw.handlers.polyline.tooltip.start = 'Click to start drawing a wall';
+  L.drawLocal.draw.handlers.polyline.tooltip.cont = 'Click to continue drawing a wall';
+  L.drawLocal.draw.handlers.polyline.tooltip.end = 'Click last point to finish drawing a wall';
 
+  map.addControl(drawControl);
   map.on('draw:created', function (e) {
     console.log('drawn item');  
     var type = e.layerType,
@@ -55,7 +60,6 @@
 
     drawnItems.addLayer(layer);
   });
-  
   var gridLayer = L.geoJSON(sampleGrid, {
     filter: function (feature, layer) {
       if (feature.properties && feature.properties.type) {
@@ -89,6 +93,9 @@
       });
     }
   }).addTo(map);
+  edgeNodes.on('mouseover', function(e) {
+     alert(e.latlng);
+  });
   
   var baseMaps = {
     "quadrangular grid": gridLayer
