@@ -1,158 +1,28 @@
 <!DOCTYPE html>
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
 <html>
+<!--<![endif]-->
+
 <head>
-	<title>SOL-viewer</title>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.css" />
-  <link rel="stylesheet" 
-        href="http://leaflet.github.io/Leaflet.draw/leaflet.draw.css"
-    />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pnid Viewer Demo Page</title>
 </head>
+
 <body>
-  <script src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js"></script>
-  <script
-        src="http://leaflet.github.io/Leaflet.draw/leaflet.draw.js">
-    </script>
-    <script src="../specs/stubs/sampleGrid.js" type="text/javascript"></script>
-  <div id="map" style="height:90vh; width:80vw"></div>
-  This is a proof of concept viewer to prepare SOLPS simulations
+<!--[if lt IE 8]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+    your browser</a> to improve your experience.</p>
+<![endif]-->
+<div id="app"></div>
 
-  <script>
-    
-    var map = L.map('map', {
-    attributionControl: false
-  });
-  map.setView([0, 0], 3);
-  var drawnItems = new L.FeatureGroup();
-  map.addLayer(drawnItems);
+<script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+</body>
 
-  var drawControl = new L.Control.Draw({
-    draw: {
-      position: 'topleft',
-      polygon: false,
-      polyline: {
-          metric: true,
-          allowIntersection: false
-      },
-      rectangle: false,
-      circle: false,
-      marker: false
-    },
-    edit: {
-      featureGroup: drawnItems
-    }
-  });
-  L.drawLocal.draw.toolbar.buttons.polyline = 'Draw a new wall';
-  L.drawLocal.draw.handlers.polyline.tooltip.start = 'Click to start drawing a wall';
-  L.drawLocal.draw.handlers.polyline.tooltip.cont = 'Click to continue drawing a wall';
-  L.drawLocal.draw.handlers.polyline.tooltip.end = 'Click last point to finish drawing a wall';
-
-  map.addControl(drawControl);
-  map.on('draw:created', function (e) {
-    console.log('drawn item');  
-    var type = e.layerType,
-      layer = e.layer;
-
-    if (type === 'polyline') {
-      layer.bindPopup('A popup!');
-    }
-
-    drawnItems.addLayer(layer);
-  });
-  var gridLayer = L.geoJSON(sampleGrid, {
-    filter: function (feature, layer) {
-      if (feature.properties && feature.properties.type) {
-        return feature.properties.type === 'computational' ? true : false;
-      }
-      return false;
-    },     
-    onEachFeature: onEachComputationalFeature
-  }).addTo(map);
-  // Fit map to bounds of your GeoJSON
-  map.fitBounds(gridLayer.getBounds());
-  
-  
-  var edgeNodes = L.geoJSON(sampleGrid, {
-
-    filter: function (feature, layer) {
-      if (feature.properties && feature.properties.type) {
-        return feature.properties.type === 'edgeNode' ? true : false;
-      }
-      return false;
-    },
-    onEachFeature: onEachEdgeNodeFeature,
-    pointToLayer: function(feature, latlng) {
-      return L.circleMarker(latlng, {
-        radius: 5,
-        fillColor: "#5555ff",
-        color: "#5555ff",
-        weight: 1,
-        opacity: 1,
-        fillOpacity: 0.8
-      });
-    }
-  }).addTo(map);
-  edgeNodes.on('mouseover', function(e) {
-     alert(e.latlng);
-  });
-  
-  var baseMaps = {
-    "quadrangular grid": gridLayer
-  };
-
-  var overlayMaps = {
-    "edge nodes of quadrangular grid": edgeNodes,
-    "vessel wall": drawnItems
-};
- 
-  
-  L.control.layers(baseMaps, overlayMaps).addTo(map);
-  function onEachWall(feature, layer) {
-    console.log("wfsAF");
-  }
-  function onEachComputationalFeature(feature, layer) {
-
-    var popupContent = ""
-    if (feature.properties && feature.properties.type && feature.properties.hasOwnProperty('x') && feature.properties.hasOwnProperty('y')) { 
-      popupContent = "<p>cell (" +
-        feature.properties.x + ", " + 
-        feature.properties.y + ") of type: " + feature.properties.type + "</p>" +
-        "corners: <br>" +
-        "(" + feature.geometry.coordinates[0][0] + ")<br>" +
-        "(" + feature.geometry.coordinates[0][1] + ")<br>" +
-        "(" + feature.geometry.coordinates[0][2] + ")<br>" +
-        "(" + feature.geometry.coordinates[0][3] + ")";
-      }
-      else {
-        popupContent = "no cell information available";
-      }
-      
-      layer.setStyle({
-        'weight': 0.2,
-        'fillOpacity': 0.1
-      });
-      layer.bindPopup(popupContent);
-    }
-
-
-    function onEachEdgeNodeFeature(feature, layer) {
-
-      var popupContent = ""
-      if (feature.properties && feature.properties.type && feature.properties.hasOwnProperty('x') && feature.properties.hasOwnProperty('y')) { 
-        popupContent = "<p>node (" +
-          feature.properties.x + ", " + 
-          feature.properties.y + ") of type: " + feature.properties.type + "</p>" +
-          "position: <br>" +
-          "(" + feature.geometry.coordinates + ")";
-      }
-      else {
-        popupContent = "no node information available"
-      }
-      layer.bindPopup(popupContent);
-    }
-
-
-  </script>
-  </body>
 </html>

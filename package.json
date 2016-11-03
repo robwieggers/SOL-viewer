@@ -1,0 +1,41 @@
+{
+  "name": "sol-viewer",
+  "version": "0.0.2",
+  "description": "Viewer component for setting up simulations for Scrape-Off Layer codes",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rimraf dist",
+    "start": "node server/main",
+    "test": "karma start --single-run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robwieggers/SOL-viewer.git"
+  },
+  "keywords": [
+    "fusion",
+    "SOL",
+    "Scrape-Off Layer",
+    "SOLPS",
+    "Viewer"
+  ],
+  "author": "Rob Wieggers",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/robwieggers/SOL-viewer/issues"
+  },
+  "homepage": "https://github.com/robwieggers/SOL-viewer#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "fs": "0.0.1-security",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "http-proxy": "^1.15.2",
+    "json-server": "^0.8.23",
+    "leaflet": "^1.0.1",
+    "mkdirp": "^0.5.1",
+    "opn": "^4.0.2",
+    "path": "^0.12.7",
+    "recursive-readdir": "^2.1.0"
+  }
+}
